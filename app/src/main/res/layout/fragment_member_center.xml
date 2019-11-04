@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="#FFF"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/ll_member_top"
+            android:layout_width="732dp"
+            android:layout_height="238px"
+            android:layout_marginLeft="@dimen/px24"
+            android:layout_marginTop="@dimen/px40"
+            android:layout_centerHorizontal="true"
+            android:background="@mipmap/vip_member_bg">
+
+            <ImageView
+                android:id="@+id/img_avatar"
+                android:layout_width="@dimen/px140"
+                android:layout_height="@dimen/px140"
+                android:layout_marginLeft="78px"
+                android:layout_marginTop="@dimen/px30"
+                android:src="@mipmap/female" />
+
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/img_avatar"
+                android:layout_marginLeft="@dimen/px32"
+                android:layout_toRightOf="@id/img_avatar"
+                android:text="赵四"
+                android:textSize="@dimen/px30" />
+
+            <ImageView
+                android:id="@+id/iv_member_vip"
+                android:layout_width="@dimen/px150"
+                android:layout_height="@dimen/px50"
+                android:layout_alignBottom="@id/img_avatar"
+                android:layout_marginLeft="@dimen/px40"
+                android:layout_marginBottom="@dimen/px15"
+                android:layout_toRightOf="@id/img_avatar"
+                android:src="@mipmap/vip_member" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/iv_member_vip"
+                android:layout_marginLeft="@dimen/px17"
+                android:layout_toRightOf="@id/iv_member_vip"
+                android:gravity="center"
+                android:text="2019-11-29 到期"
+                android:layout_marginBottom="@dimen/px10"
+                android:textSize="@dimen/px24" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/iv_package_selection"
+            android:layout_width="@dimen/px37"
+            android:layout_height="@dimen/px37"
+            android:src="@mipmap/package_selection"
+            android:layout_below="@+id/ll_member_top"
+            android:layout_marginLeft="@dimen/px72"
+            android:layout_marginTop="@dimen/px23"
+            />
+        <TextView
+            android:id="@+id/tv_package_selection_des"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="套餐选择"
+            android:layout_alignTop="@id/iv_package_selection"
+            android:layout_toRightOf="@id/iv_package_selection"
+            android:layout_marginLeft="@dimen/px13"
+            android:textStyle="bold"
+            android:textSize="26px"
+            />
+        
+        <RelativeLayout
+            android:layout_width="170px"
+            android:layout_height="@dimen/px230"
+            android:background="@mipmap/checked"
+            android:layout_marginLeft="@dimen/px130"
+            android:layout_marginTop="@dimen/px27"
+            android:layout_below="@id/iv_package_selection"
+            >
+            <TextView
+                android:id="@+id/tv_discount"
+                android:text="推荐"
+                android:textSize="@dimen/px16"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</ScrollView>

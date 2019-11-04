@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@color/white"
+        android:width="@dimen/px180"
+        android:height="@dimen/px150"
+        />
+    <item android:drawable="@drawable/main_select"
+        android:gravity="top|center"
+        android:width="64px"
+        android:height="78px"
+        android:top="@dimen/px22"
+        />
+</layer-list>

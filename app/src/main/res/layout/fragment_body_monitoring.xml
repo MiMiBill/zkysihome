@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/yellow_gray"
+    android:layout_height="match_parent">
+    <include layout="@layout/title_bar"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:layout_height="@dimen/px68">
+        <Button
+            android:id="@+id/btn_blood_pressure"
+            style="@style/base_body_monitor_select_bar_btn"
+            android:text="血压"
+            android:background="@mipmap/blood_pressure"
+            />
+        <Button
+            android:id="@+id/btn_blood_sugar"
+            style="@style/base_body_monitor_select_bar_btn"
+            android:text="血糖"
+            android:background="@mipmap/blood_sugar"
+            />
+        <Button
+            android:id="@+id/btn_heart_rate"
+            style="@style/base_body_monitor_select_bar_btn"
+            android:text="心率"
+            android:background="@mipmap/heart_rate"
+            />
+        <Button
+            android:id="@+id/btn_body_temperature"
+            style="@style/base_body_monitor_select_bar_btn"
+            android:text="体温"
+            android:background="@mipmap/body_temparture"
+            />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/fl_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#f00"
+        />
+
+
+</LinearLayout>

@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:id="@+id/rl_pad_status_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px40"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:visibility="visible"
+        android:background="@color/white"
+        >
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black_gray"
+            android:textSize="@dimen/px14"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/px10"/>
+
+        <LinearLayout
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_marginRight="@dimen/px30"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_net"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/px14"
+                android:textColor="@color/black_gray" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/px10"
+                android:text="中科云上"
+                android:textColor="@color/black_gray"
+                android:textSize="@dimen/px14" />
+
+            <TextView
+                android:id="@+id/tv_net_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/px10"
+                android:textColor="@color/black_gray"
+                android:textSize="@dimen/px14" />
+
+            <ImageView
+                android:id="@+id/iv_net"
+                android:layout_width="@dimen/px26"
+                android:layout_height="@dimen/px20"
+                android:layout_marginLeft="@dimen/px10"
+                />
+
+            <ImageView
+                android:id="@+id/iv_wifi"
+                android:layout_width="@dimen/px26"
+                android:layout_height="@dimen/px20"
+                android:layout_marginLeft="@dimen/px10"
+                />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_right_bar"
+        android:layout_width="@dimen/px180"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:background="@color/white"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rl_pad_status_bar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
+      <Button
+          android:id="@+id/btn_main"
+          android:background="@drawable/tab_bar_bg_main_selector"
+          style="@style/base_right_bar_btn"
+          />
+        <Button
+            android:id="@+id/btn_member_Center"
+            android:background="@drawable/tab_bar_bg_member_center_selector"
+            style="@style/base_right_bar_btn"
+            />
+        <Button
+            android:id="@+id/btn_my_nurse"
+            android:background="@drawable/tab_bar_bg_my_nurse_selector"
+            style="@style/base_right_bar_btn"
+            />
+        <Button
+            android:id="@+id/btn_personal"
+            android:background="@drawable/tab_bar_bg_personal_selector"
+            style="@style/base_right_bar_btn"
+            />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@color/transparent"
+            android:layout_weight="1"
+            />
+
+        <Button
+            android:id="@+id/btn_setting"
+            android:text="设置"
+            android:layout_height="78dp"
+            android:gravity="center"
+            android:drawableLeft="@mipmap/setting"
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp"
+            android:background="@color/transparent"
+            style="@style/base_right_bar_btn"
+            />
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/ll_left_bar"
+        android:layout_width="@dimen/px320"
+        android:layout_height="0dp"
+        android:background="@color/white_gray_e8e8e8"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rl_pad_status_bar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
+
+
+        <LinearLayout
+            android:id="@+id/ll_left_top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="230px"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:background="@mipmap/avatar_bg"
+           >
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/img_avatar"
+                android:layout_marginTop="@dimen/px20"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:src="@mipmap/female"
+                app:civ_border_width="0dp"
+                app:civ_border_color="#FF000000"/>
+
+          <TextView
+              android:id="@+id/tv_username"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="@dimen/px10"
+              android:text="张全蛋"
+              android:textSize="@dimen/px26"
+              android:textStyle="bold"
+              android:textColor="@color/white"
+              />
+
+            <TextView
+                android:id="@+id/tv_telephone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="13888888888"
+                android:layout_marginTop="@dimen/px5"
+                android:textSize="@dimen/px26"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                />
+        </LinearLayout>
+       <!-- <com.zkys.yun.ihome.view.progress.RoundnessProgressBar
+            android:id="@+id/rp_status_progress"
+            android:layout_width="93dp"
+            android:layout_height="93dp"
+            android:layout_below="@+id/ll_left_top_bar"
+            android:layout_centerHorizontal="true"
+            app:progress_reached_color="@color/blue_gray"
+            app:progress_text_size="25sp"
+            app:progress_text_color="@color/black"
+            android:progress="30"
+            android:layout_marginTop="20dp"
+            />-->
+
+        <RelativeLayout
+            android:id="@+id/rp_status_progress"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px190"
+            android:layout_below="@+id/ll_left_top_bar"
+            android:layout_centerHorizontal="true"
+
+            >
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px150"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="40px"
+                android:scaleType="fitCenter"
+                android:src="@mipmap/status_circle"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="75分"
+                android:textStyle="bold"
+                android:textSize="@dimen/px40"
+                android:textColor="@color/color_333333"
+                />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_health_description"
+            android:layout_width="@dimen/px180"
+            android:layout_height="@dimen/px45"
+            android:layout_below="@+id/rp_status_progress"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="您的身体健康状况很好哦，请继续保持！"
+            android:textAlignment="center"
+            android:textColor="#666666"
+            android:textSize="@dimen/px18"
+            />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/rl_blood_sugar"
+            android:layout_below="@id/tv_health_description"
+            android:layout_marginTop="51px"
+            android:layout_width="@dimen/px150"
+            android:layout_height="70dp"
+            android:gravity="center"
+            android:layout_marginLeft="14dp"
+            >
+
+            <TextView
+                android:id="@+id/tv_blood_sugar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="血糖"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:textColor="#666666"
+                android:textSize="18px"
+                />
+            <LinearLayout
+                android:id="@+id/ll_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/tv_blood_sugar_title"
+                app:layout_constraintLeft_toLeftOf="@id/tv_blood_sugar_title"
+                >
+                <TextView
+                    android:id="@+id/tv_blood_sugar_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#38DBB0"
+                    android:gravity="right"
+                    android:textSize="@dimen/px36"
+                    android:paddingTop="10dp"
+                    android:textStyle="bold"
+                    android:text="72"
+                    />
+                <TextView
+                    android:id="@+id/tv_blood_sugar_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="10dp"
+                    android:text="mg/dl"
+                    android:textSize="18px"
+                    android:textColor="@color/color_333333"
+                    android:textStyle="bold"
+                    />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/rl_blood_pressure"
+           android:layout_alignTop="@id/rl_blood_sugar"
+            android:layout_width="@dimen/px150"
+            android:layout_height="70dp"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            >
+
+            <TextView
+                android:id="@+id/tv_blood_pressure_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="血压"
+                android:textSize="18px"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:textColor="#666666"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/tv_blood_pressure_title"
+                app:layout_constraintLeft_toLeftOf="@id/tv_blood_pressure_title"
+                >
+                <TextView
+                    android:id="@+id/tv_blood_pressure_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:textSize="@dimen/px36"
+                    android:paddingTop="10dp"
+                    android:textStyle="bold"
+                    android:textColor="#FF8D51"
+                    android:text="130"
+                    />
+                <TextView
+                    android:id="@+id/tv_blood_pressure_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="10dp"
+                    android:text="mm/hg"
+                    android:textSize="18px"
+                    android:textColor="@color/color_333333"
+                    android:textStyle="bold"
+                    />
+
+            </LinearLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/rl_heart_rate"
+            android:layout_below="@id/rl_blood_sugar"
+            android:layout_alignLeft="@id/rl_blood_sugar"
+            android:layout_width="@dimen/px150"
+            android:layout_height="70dp"
+            android:gravity="center"
+            >
+
+            <TextView
+                android:id="@+id/tv_heart_rate_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="心率"
+                android:textSize="18px"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:textColor="#666666"
+                />
+
+            <LinearLayout
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/tv_heart_rate_title"
+                app:layout_constraintLeft_toLeftOf="@id/tv_heart_rate_title"
+                >
+
+
+                <TextView
+                    android:id="@+id/tv_heart_rate_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#38DBB0"
+                    android:gravity="right"
+                    android:textSize="@dimen/px36"
+                    android:paddingTop="10dp"
+                    android:textStyle="bold"
+                    android:text="80"
+                    />
+                <TextView
+                    android:id="@+id/tv_heart_rate_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="10dp"
+                    android:text="bpm"
+                    android:textSize="18px"
+                    android:textColor="@color/color_333333"
+                    android:textStyle="bold"
+                    />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/rl_body_temperature"
+            android:layout_below="@id/rl_blood_sugar"
+            android:layout_width="@dimen/px150"
+            android:layout_height="70dp"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            >
+
+            <TextView
+                android:id="@+id/tv_body_temperature_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="体温"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:textSize="18px"
+                android:textColor="#666666"
+                />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/tv_body_temperature_title"
+                app:layout_constraintLeft_toLeftOf="@id/tv_body_temperature_title"
+                >
+
+                <TextView
+                    android:id="@+id/tv_body_temperature_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FF8D51"
+                    android:gravity="right"
+                    android:textSize="@dimen/px36"
+                    android:paddingTop="10dp"
+                    android:textStyle="bold"
+                    android:text="36.0"
+
+                    />
+                <TextView
+                    android:id="@+id/tv_body_temperature_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="10dp"
+                    android:text="℃"
+                    android:textSize="18px"
+                    android:textColor="@color/color_333333"
+                    android:textStyle="bold"
+                    />
+
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/rl_heart_rate"
+            android:layout_below="@id/rl_body_temperature"
+            android:layout_marginTop="@dimen/px30"
+            android:textColor="#666666"
+            android:textSize="@dimen/px16"
+            android:text="查看详情>>"
+            />
+
+    </RelativeLayout>
+
+<!--    <FrameLayout-->
+<!--        android:id="@+id/fl_container"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_marginLeft="18dp"-->
+<!--        android:layout_marginRight="18dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintLeft_toRightOf="@id/ll_left_bar"-->
+<!--        app:layout_constraintRight_toLeftOf="@id/ll_right_bar"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/rl_pad_status_bar" />-->
+
+    <FrameLayout
+        android:id="@+id/fl_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/ll_left_bar"
+        app:layout_constraintRight_toLeftOf="@id/ll_right_bar"
+        app:layout_constraintTop_toBottomOf="@id/rl_pad_status_bar" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

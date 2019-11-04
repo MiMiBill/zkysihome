@@ -1,0 +1,125 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+    defaultConfig {
+        applicationId "com.zkys.yun.ihome"
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            //选择要添加的对应 cpu 类型的 .so 库。
+            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a'
+            // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
+        }
+
+        manifestPlaceholders = [
+                JPUSH_PKGNAME : applicationId,
+                JPUSH_APPKEY : "3f5dde1adb9c5876e6596714", //JPush 上注册的包名对应的 Appkey.
+                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
+        ]
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:29.0.0'
+    implementation 'com.android.support:support-v4:29.0.2'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+
+    //    testImplementation 'junit:junit:4.12'
+
+    //    androidTestImplementation 'androidx.test:runner:1.1.1'
+
+    //    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    implementation 'me.yokeyword:fragmentation:1.3.6'
+
+    //butterknife
+    implementation 'com.jakewharton:butterknife:10.2.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
+
+    //recycleview的adapter
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
+
+    //  implementation 'com.android.support:recyclerview-v7:23.4.0'
+    implementation 'org.greenrobot:eventbus:3.1.1'
+
+    //简单banner                   https://github.com/bumptech/glide
+
+    //    implementation 'com.youth.banner:banner:1.4.10'  //最新版本
+
+    //实现复杂baner  https://github.com/saiwu-bigkoo/Android-ConvenientBanner
+    implementation 'com.bigkoo:convenientbanner:2.1.5'
+
+    //地址变小写了，额。。。
+    implementation 'androidx.recyclerview:recyclerview:1.0.0+'
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+
+    //完整版引入
+
+    // implementation 'com.shuyu:GSYVideoPlayer:7.1.1'
+
+    //圆形头像 https://github.com/hdodenhof/CircleImageView
+    implementation 'de.hdodenhof:circleimageview:3.0.1'
+
+    // rxjava
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.3'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+
+    // 日志
+    implementation 'com.orhanobut:logger:2.2.0'
+
+    //okgo
+
+    //必须使用
+    implementation 'com.lzy.net:okgo:3.0.4'
+
+    //以下三个选择添加，okrx和okrx2不能同时使用
+
+    //implementation 'com.lzy.net:okrx:1.0.2'
+
+    //implementation 'com.lzy.net:okrx2:2.0.2'
+    implementation 'com.lzy.net:okserver:2.0.5'
+
+    //郭霖数据库框架
+    implementation 'org.litepal.android:java:3.0.0'
+
+    // gson
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    //蓝牙相关
+
+    //implementation 'com.inuker.bluetooth:library:1.4.0'
+
+    //极光推送
+    implementation 'cn.jiguang.sdk:jpush:3.3.6'
+
+    // 此处以JPush 3.3.6 版本为例。
+    implementation 'cn.jiguang.sdk:jcore:2.1.6'
+
+    // 此处以JCore 2.1.6 版本为例。
+    implementation files('libs/sn_care_sdk.jar')
+
+    //用户权限获取
+    implementation 'com.yanzhenjie:permission:2.0.0-alpha'
+
+
+
+}

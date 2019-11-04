@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="151dp"
+    android:layout_height="152dp">
+
+    <ImageView
+        android:id="@+id/img_icon"
+        android:layout_marginTop="@dimen/px30"
+        android:layout_width="@dimen/px130"
+        android:layout_height="@dimen/px130"
+        android:src="@mipmap/female"
+        android:layout_centerHorizontal="true"
+        />
+
+    <TextView
+        android:id="@+id/rv_msg"
+        android:gravity="center"
+        android:textSize="@dimen/px24"
+        android:textColor="@color/black_333333"
+        android:layout_marginTop="@dimen/px10"
+        android:layout_below="@id/img_icon"
+        android:text="你好呀"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>
