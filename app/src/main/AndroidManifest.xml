@@ -24,14 +24,19 @@
 
         <activity android:name="com.zkys.yun.ihome.app.startup.ui.NewActivationActivity"
             android:screenOrientation="landscape"
+
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <!--  加载设置为singleInstance模式，防止多次加载    -->
         <activity android:name="com.zkys.yun.ihome.MainActivity"
+            android:launchMode="singleInstance"
             android:screenOrientation="landscape"
             />
         <activity android:name=".app.bloodsugar.ui.BloodSugarAlertSelectTimeActivity"

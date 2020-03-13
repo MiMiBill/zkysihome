@@ -71,11 +71,8 @@ public class MainActivity extends BaseActivity {
     @Override
     public void initData() {
 
-
         BleUtil.initSNHandler(this);
-
-       startService( new Intent(getContext(),MainService.class));
-
+        startService( new Intent(getContext(),MainService.class));
         fragments[0] = HomeFragment.newInstance();
         fragments[1] = MemberCenterFragment.newInstance();
         fragments[2] = MyNurseFragment.newInstance();
