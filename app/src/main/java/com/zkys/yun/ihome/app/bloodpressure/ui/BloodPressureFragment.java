@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 
 import com.sinocare.Impl.SC_BlueToothSearchCallBack;
 import com.sinocare.domain.BlueToothInfo;
-import com.zkys.yun.ihome.R;
+import com.muju.note.launcher.R;
 import com.zkys.yun.ihome.app.bloodpressure.bean.BloodPressureDeviceInfo;
 import com.zkys.yun.ihome.app.bloodpressure.device.BPMManager;
 import com.zkys.yun.ihome.app.bloodpressure.device.BPMManagerCallbacks;

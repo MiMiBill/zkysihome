@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+import com.muju.note.launcher.R;
 import com.zkys.yun.ihome.app.home.ui.HomeFragment;
 import com.zkys.yun.ihome.app.membercenter.ui.MemberCenterFragment;
 import com.zkys.yun.ihome.app.mynurse.ui.MyNurseFragment;

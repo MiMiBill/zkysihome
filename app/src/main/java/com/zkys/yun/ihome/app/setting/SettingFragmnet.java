@@ -1,6 +1,6 @@
 package com.zkys.yun.ihome.app.setting;
 
-import com.zkys.yun.ihome.R;
+import com.muju.note.launcher.R;
 import com.zkys.yun.ihome.app.personal.ui.PersonalFragment;
 import com.zkys.yun.ihome.base.BaseFragment;
 

@@ -12,7 +12,7 @@ import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.holder.Holder;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
-import com.zkys.yun.ihome.R;
+import com.muju.note.launcher.R;
 import com.zkys.yun.ihome.app.bodymonitoring.ui.BodyMonitoringFragment;
 import com.zkys.yun.ihome.app.home.adapter.HomeMenusAdapter;
 import com.zkys.yun.ihome.app.home.holder.LocalImageHolderView;

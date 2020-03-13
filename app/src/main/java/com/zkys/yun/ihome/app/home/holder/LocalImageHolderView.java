@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import com.bigkoo.convenientbanner.holder.Holder;
 import com.bumptech.glide.Glide;
 
-import com.zkys.yun.ihome.R;
+import com.muju.note.launcher.R;
 import com.zkys.yun.ihome.base.LauncherApplication;
 
 public class LocalImageHolderView  extends Holder<String> {

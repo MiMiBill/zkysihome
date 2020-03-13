@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 
 import com.lzy.okgo.OkGo;
 import com.zkys.yun.ihome.MainActivity;
-import com.zkys.yun.ihome.R;
+import com.muju.note.launcher.R;
 import com.zkys.yun.ihome.app.startup.contract.NewActivationContract;
 import com.zkys.yun.ihome.app.startup.presenter.NewActivationPresenter;
 import com.zkys.yun.ihome.base.BaseActivity;

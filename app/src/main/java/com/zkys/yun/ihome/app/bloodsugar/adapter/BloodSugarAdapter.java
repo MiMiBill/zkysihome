@@ -4,7 +4,7 @@ import androidx.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.zkys.yun.ihome.R;
+import com.muju.note.launcher.R;
 import com.zkys.yun.ihome.app.bloodsugar.bean.BloodSugarBean;
 import com.zkys.yun.ihome.util.DateUtil;
 

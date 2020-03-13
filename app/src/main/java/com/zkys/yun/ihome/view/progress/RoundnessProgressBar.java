@@ -7,7 +7,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 
-import com.zkys.yun.ihome.R;
+import com.muju.note.launcher.R;
 
 public class RoundnessProgressBar extends HorizontalProgressBarWithNumber {
 

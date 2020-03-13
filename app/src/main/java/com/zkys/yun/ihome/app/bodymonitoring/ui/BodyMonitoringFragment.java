@@ -8,7 +8,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.zkys.yun.ihome.R;
+import com.muju.note.launcher.R;
 import com.zkys.yun.ihome.app.bloodpressure.ui.BloodPressureFragment;
 import com.zkys.yun.ihome.app.bloodsugar.ui.BloodSugarFragment;
 import com.zkys.yun.ihome.app.bodytemperature.ui.BodyTemperatureFragment;

@@ -4,7 +4,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.zkys.yun.ihome.R;
+import com.muju.note.launcher.R;
 import com.zkys.yun.ihome.app.mynurse.ui.MyNurseFragment;
 import com.zkys.yun.ihome.base.BaseFragment;
 

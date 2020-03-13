@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.zkys.yun.ihome.R;
+import com.muju.note.launcher.R;
 
 
 

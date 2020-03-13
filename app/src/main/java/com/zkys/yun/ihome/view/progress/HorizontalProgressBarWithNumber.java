@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.ProgressBar;
 
-import com.zkys.yun.ihome.R;
+import com.muju.note.launcher.R;
 
 public class HorizontalProgressBarWithNumber extends ProgressBar {
 

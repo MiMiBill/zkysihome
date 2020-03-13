@@ -43,7 +43,7 @@ import com.sinocare.status.SC_DataStatusUpdate;
 import com.sinocare.status.SC_ErrorStatus;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
-import com.zkys.yun.ihome.R;
+import com.muju.note.launcher.R;
 import com.zkys.yun.ihome.app.bloodsugar.adapter.BloodSugarAdapter;
 import com.zkys.yun.ihome.app.bloodsugar.bean.BloodSugarBean;
 import com.zkys.yun.ihome.app.bloodsugar.bean.BloodSugarDeviceInfo;
