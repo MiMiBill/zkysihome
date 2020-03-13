@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.MenuItemHoverListener;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -54,6 +56,7 @@ import com.zkys.yun.ihome.base.BaseFragment;
 import com.zkys.yun.ihome.base.LauncherApplication;
 import com.zkys.yun.ihome.litepal.LitePalDb;
 import com.zkys.yun.ihome.util.DateUtil;
+import com.zkys.yun.ihome.util.ble.BleUtil;
 import com.zkys.yun.ihome.util.log.LogUtil;
 import com.zkys.yun.ihome.util.rx.RxUtil;
 import com.zkys.yun.ihome.util.toast.FancyToast;
@@ -80,14 +83,15 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
-public class BloodSugarFragment extends BaseFragment<BloodSugarPresenter> implements BloodSugarContract.View {
+public class BloodSugarFragment extends BaseFragment<BloodSugarPresenter> implements BloodSugarContract.View, BloodSugarAlertSelectTimeActivity.ISetData {
 
-//    private static final int MSG_CONNECT_SUCCESS  = 1;
-//    private static final int MSG_CONNECTING  = 2;
-//    private static final int MSG_CONNECT_FAIL  = 3;
-//    private static final int MSG_GET_BLOOD_SUGAR_DATA  = 4;
-//    private static final int MSG_BLUETOOTH_HAS_DISCONNECT  = 5;
-//    private static final int MSG_DEVICE_HAS_SHUT_DOWN  = 6;
+    private static final int MSG_CONNECT_SUCCESS  = 1; //成功
+    private static final int MSG_CONNECTING  = 2;//连接中
+    private static final int MSG_CONNECT_FAIL  = 3;//连接失败
+    private static final int MSG_CONNECT_SHUT_DOWN  = 4;//已经关机
+    private static final int MSG_CONNECT_DISPLAY_DATA  = 5;//显示数据
+
+    private int deviceStatus = 0;
 
     @BindView(R.id.btn_connect_blood_sugar)
     Button btnConnectBloodSugar;
@@ -107,7 +111,8 @@ public class BloodSugarFragment extends BaseFragment<BloodSugarPresenter> implem
     @BindView(R.id.rv_blood_sugar_data_form)
     RecyclerView rvBloodSugarDataForm;
 
-    BloodSugarAdapter bloodSugarAdapter;
+    private BloodSugarAdapter bloodSugarAdapter;
+    private boolean isFirst = true;
 
     private LinkedList<BloodSugarBean> bloodSugarBeans = new LinkedList<>();
 
@@ -118,11 +123,18 @@ public class BloodSugarFragment extends BaseFragment<BloodSugarPresenter> implem
     private SN_MainHandler snMainHandler = null;
 
     //最后一次测量出来的值
-    private String curBloodSugar = "55.0";
+    private String curBloodSugar;
 
     private void setConnectSuccessUI()
     {
-
+        deviceStatus = MSG_CONNECT_SUCCESS;
+        if (curBloodSugar != null)
+        {
+            deviceStatus = MSG_CONNECT_DISPLAY_DATA;
+            setBloodSugarDataUI(curBloodSugar);
+            return;
+        }
+        if (btnConnectBloodSugar == null)return;
         btnConnectBloodSugar.setText("连接成功");
         btnConnectBloodSugar.setTextSize(30);
         btnConnectBloodSugar.setTextColor(Color.parseColor("#38DBB0"));
@@ -138,8 +150,10 @@ public class BloodSugarFragment extends BaseFragment<BloodSugarPresenter> implem
     }
 
 
-    private void setBlueToothConnectingUI()
+    private void setConnectingUI()
     {
+        deviceStatus = MSG_CONNECTING;
+        if (btnConnectBloodSugar == null)return;
         btnConnectBloodSugar.setText("正在连接...");
         btnConnectBloodSugar.setTextSize(30);
         btnConnectBloodSugar.setTextColor(Color.parseColor("#46BEEB"));
@@ -152,10 +166,23 @@ public class BloodSugarFragment extends BaseFragment<BloodSugarPresenter> implem
 
     private void setErrMsgToConnectBtnUI(String msg)
     {
+        if (msg.equalsIgnoreCase("设备已关机"))
+        {
+            deviceStatus = MSG_CONNECT_SHUT_DOWN;
+        }else {
+            deviceStatus = MSG_CONNECT_FAIL;
+        }
+        if (btnConnectBloodSugar == null)return;
+        if (deviceStatus == MSG_CONNECT_SHUT_DOWN)
+        {
+            btnConnectBloodSugar.setClickable(false);
+        }else {
+            btnConnectBloodSugar.setClickable(true);
+        }
         btnConnectBloodSugar.setText(msg);
         btnConnectBloodSugar.setTextSize(28);
         btnConnectBloodSugar.setTextColor(Color.parseColor("#FF5157"));
-        btnConnectBloodSugar.setClickable(true);
+
         tvBloodSugarUnit.setVisibility(View.GONE);
         imDisplayDataBg.setVisibility(View.GONE);
         imgConnectBg.clearAnimation();
@@ -166,6 +193,8 @@ public class BloodSugarFragment extends BaseFragment<BloodSugarPresenter> implem
 
     private void setBloodSugarDataUI(String data)
     {
+        deviceStatus = MSG_CONNECT_DISPLAY_DATA;
+        if (btnConnectBloodSugar == null)return;
         btnConnectBloodSugar.setText(data);
         btnConnectBloodSugar.setTextSize(30);
         btnConnectBloodSugar.setTextColor(Color.parseColor("#46BEEB"));
@@ -178,19 +207,23 @@ public class BloodSugarFragment extends BaseFragment<BloodSugarPresenter> implem
 
     public static BloodSugarFragment newInstance()
     {
-        return new BloodSugarFragment();
+        if (sInstance == null)
+        {
+            sInstance = new BloodSugarFragment();
+        }
+        return sInstance;
     }
 
 
     private void initForm()
     {
-        LitePalDb.setZkysDataDB();
-        LitePal.deleteAll(BloodSugarBean.class);
-        for (int i =0;i < 1 ; i ++)
-        {
-            BloodSugarBean bloodSugarBean =  new BloodSugarBean(DateUtil.getCurYearMonthDay(),"14.2","13.2","11.2","15.2","11.2","11.4","11.2","5.6");
-            bloodSugarBean.save();
-        }
+//        LitePalDb.setZkysDataDB();
+//        LitePal.deleteAll(BloodSugarBean.class);
+//        for (int i =0;i < 1 ; i ++)
+//        {
+//            BloodSugarBean bloodSugarBean =  new BloodSugarBean(DateUtil.getCurYearMonthDay(),"14.2","13.2","11.2","15.2","11.2","11.4","11.2","5.6");
+//            bloodSugarBean.save();
+//        }
 
         bloodSugarAdapter = new BloodSugarAdapter(R.layout.item_blood_sugar_data,bloodSugarBeans);
         rvBloodSugarDataForm.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -210,11 +243,8 @@ public class BloodSugarFragment extends BaseFragment<BloodSugarPresenter> implem
 
     @Override
     public void initData() {
+        LogUtil.i("initData");
 
-        if (EventBus.getDefault().isRegistered(this))
-        {
-            EventBus.getDefault().register(this);
-        }
         String [] macs = {"C0:15:83:CD:FD:20"};//,"00:15:83:CD:FD:20"
         BloodSugarDeviceInfo.getsInstance()
                 .setFactory("三诺")
@@ -222,9 +252,12 @@ public class BloodSugarFragment extends BaseFragment<BloodSugarPresenter> implem
                 .setSn("1GJ8ER00505")
                 .setMacList(Arrays.asList(macs))
         ;
-
         initForm();
-
+        snMainHandler = BleUtil.getSnMainHandler();
+//        if (isFirst)
+//        {
+//            initSNHandle();
+//        }
 
     }
 
@@ -233,30 +266,65 @@ public class BloodSugarFragment extends BaseFragment<BloodSugarPresenter> implem
     public void onSupportVisible() {
         super.onSupportVisible();
 
+        if (deviceStatus == MSG_CONNECT_SUCCESS)
+        {
+            setConnectSuccessUI();
+
+        }else if (deviceStatus == MSG_CONNECT_DISPLAY_DATA){
+            setBloodSugarDataUI(curBloodSugar);
+        }else if (deviceStatus == MSG_CONNECT_SHUT_DOWN)
+        {
+            setErrMsgToConnectBtnUI("设备已关机");
+        }else if (deviceStatus == MSG_CONNECTING)
+        {
+            setConnectingUI();
+        }else {
+            setErrMsgToConnectBtnUI("连接失败");
+        }
+
         LogUtil.d("onSupportVisible");
-        getActivity().registerReceiver(mBtReceiver, makeIntentFilter());
-        startConnectBloodSugarDevice();
+        if (getActivity() != null)
+        {
+            getActivity().registerReceiver(mBtReceiver, makeIntentFilter());
+        }
+        if (isFirst){
+            isFirst = false;
+            startConnectBloodSugarDevice();
+        }
+
+
+
     }
 
 
+    //正在连接设备
     private void startConnectBloodSugarDevice()
     {
-        btnConnectBloodSugar.setClickable(false);
-        //1.开始动画
-        roateAnimation = AnimationUtils.loadAnimation(getActivity(),R.anim.cycler_rotate);
-        imgConnectBg.startAnimation(roateAnimation);
-        //2.开始搜索设备
+        if (snMainHandler == null)return;
+
+       btnConnectBloodSugar.setClickable(false);
+       //1.开始动画
+       roateAnimation = AnimationUtils.loadAnimation(LauncherApplication.getContext(),R.anim.cycler_rotate);
+       imgConnectBg.startAnimation(roateAnimation);
+       //2.开始搜索设备
 //        handler.obtainMessage(MSG_CONNECTING).sendToTarget();
-        setBlueToothConnectingUI();
-        startSearchBluetoothDevice();
-        disposable =  Observable.timer(10, TimeUnit.SECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Long>() {
-                    @Override
-                    public void accept(Long aLong) throws Exception {
-                        setErrMsgToConnectBtnUI("连接失败");
-                    }
-                });
+        setConnectingUI();
+       initReceiveBloodSugarDataListener(snMainHandler);
+       mPresenter.searchBluetoothDevices(snMainHandler);
+       disposable =  Observable.timer(10, TimeUnit.SECONDS)
+               .observeOn(AndroidSchedulers.mainThread())
+               .subscribe(new Consumer<Long>() {
+                   @Override
+                   public void accept(Long aLong) throws Exception {
+                       setErrMsgToConnectBtnUI("连接失败");
+                       deviceStatus = MSG_CONNECT_FAIL;
+                   }
+               });
+
+
+
+
+
     }
 
 
@@ -265,12 +333,12 @@ public class BloodSugarFragment extends BaseFragment<BloodSugarPresenter> implem
     private void stopConnectBloodSugarDevice()
     {
         //1.停止动画
-        imgConnectBg.clearAnimation();
+//        imgConnectBg.clearAnimation();
         //2.停止搜索设备
-        if (snMainHandler == null)
+
+        if (snMainHandler != null)
         {
             snMainHandler.cancelSearch();
-            snMainHandler.disconnectDevice();
         }
 
 
@@ -280,35 +348,44 @@ public class BloodSugarFragment extends BaseFragment<BloodSugarPresenter> implem
     public void onSupportInvisible() {
         super.onSupportInvisible();
         LogUtil.d("onSupportInvisible");
-        getActivity().unregisterReceiver(mBtReceiver);
-        stopConnectBloodSugarDevice();
-    }
-
-    private void startSearchBluetoothDevice() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            AndPermission.with(getActivity())
-                    .permission(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_PHONE_STATE)
-                    .onGranted(new Action() {
-                        @Override
-                        public void onAction(List<String> permissions) {
-                            snMainHandler = SN_MainHandler.getBlueToothInstance(getActivity());
-                            initReceiveBloodSugarDataListener(snMainHandler);
-                            mPresenter.searchBluetoothDevices(snMainHandler);
-                        }
-                    }).onDenied(new Action() {
-                @Override
-                public void onAction(List<String> permissions) {
-                    Toast.makeText(getActivity(), "请先允许用户权限", Toast.LENGTH_SHORT).show();
-                }
-            }).start();
-        }else {
-            snMainHandler = SN_MainHandler.getBlueToothInstance(getActivity());
-            initReceiveBloodSugarDataListener(snMainHandler);
-            mPresenter.searchBluetoothDevices(snMainHandler);
+        if (getActivity() != null)
+        {
+            getActivity().unregisterReceiver(mBtReceiver);
         }
 
+        stopConnectBloodSugarDevice();
+
+
     }
+
+
+//    private void initSNHandle()
+//    {
+//        if (snMainHandler != null)return;
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+//            AndPermission.with(getActivity())
+//                    .permission(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_PHONE_STATE)
+//                    .onGranted(new Action() {
+//                        @Override
+//                        public void onAction(List<String> permissions) {
+//                            snMainHandler = SN_MainHandler.getBlueToothInstance(LauncherApplication.getContext());
+//                        }
+//                    }).onDenied(new Action() {
+//                @Override
+//                public void onAction(List<String> permissions) {
+//                    Toast.makeText(getActivity(), "请先允许用户权限", Toast.LENGTH_SHORT).show();
+//                }
+//            }).start();
+//        }else {
+//            snMainHandler = SN_MainHandler.getBlueToothInstance(LauncherApplication.getContext());
+//        }
+//
+//    }
+
+
+
+
+
 
 
 
@@ -326,6 +403,8 @@ public class BloodSugarFragment extends BaseFragment<BloodSugarPresenter> implem
     }
 
 
+
+
     @OnClick({R.id.btn_connect_blood_sugar,R.id.btn_replace_the_binding,R.id.btn_set_verification_code})
     public void onClickView(View view)
     {
@@ -338,14 +417,14 @@ public class BloodSugarFragment extends BaseFragment<BloodSugarPresenter> implem
             }
             case R.id.btn_replace_the_binding:
             {
-                FancyToast.makeText(getActivity(),"切换绑定").show();
+                FancyToast.makeText(LauncherApplication.getContext(),"切换绑定").show();
                 break;
             }
             case R.id.btn_set_verification_code:
             {
-                FancyToast.makeText(getActivity(),"输入校验码").show();
-                startActivity(new Intent(getActivity(),BloodSugarAlertSelectTimeActivity.class));
-
+                FancyToast.makeText(LauncherApplication.getContext(),"输入校验码").show();
+//                BloodSugarAlertSelectTimeActivity.setiSetData(BloodSugarFragment.this);
+//                startActivity(new Intent(getActivity(),BloodSugarAlertSelectTimeActivity.class));
                 break;
             }
         }
@@ -403,35 +482,160 @@ public class BloodSugarFragment extends BaseFragment<BloodSugarPresenter> implem
 
     }
 
-    //获取广告
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(BloodSugarAlertSelectTimeEvent event) {
 
-        LogUtil.d("BloodSugarAlertSelectTimeEvent");
+
+
+
+
+    private void initReceiveBloodSugarDataListener(SN_MainHandler handler)
+    {
+        handler.registerReceiveBloodSugarData(new SC_CurrentDataCallBack<BloodSugarData>() {
+            @Override
+            public void onStatusChange(int status) {
+                // TODO Auto-generated method stub
+                if (status == SC_DataStatusUpdate.SC_BLOOD_FFLASH) {
+                    LogUtil.d("请插入试条测试！");
+                    deviceStatus = MSG_CONNECT_SUCCESS;
+                    setConnectSuccessUI();
+//                    list.add(new DeviceListItem("请插入试条测试！", false));
+                } else if (status == SC_DataStatusUpdate.SC_MC_TESTING) {
+                    LogUtil.d("正在测试，请稍后");
+
+//                    list.add(new DeviceListItem("正在测试，请稍后！", false));
+                } else if (status == SC_DataStatusUpdate.SC_MC_SHUTTINGDOWN) {
+//                    list.add(new DeviceListItem("正在关机！", false));
+                    LogUtil.d("正在关机");
+                    FancyToast.makeText(getActivity(),"正在关机");
+                } else if (status == SC_DataStatusUpdate.SC_MC_SHUTDOWN) {
+                    LogUtil.d("已关机");
+
+                    FancyToast.makeText(LauncherApplication.getContext(),"已关机");
+                    setErrMsgToConnectBtnUI("设备已关机");
+//                    handler.obtainMessage(MSG_DEVICE_HAS_SHUT_DOWN,"设备已关机").sendToTarget();
+//                    handler.obtainMessage(MSG_CONNECT_FAIL,"设备已关机").sendToTarget();
+                }
+
+            }
+
+            @Override
+            public void onReceiveSyncData(BloodSugarData datas) {
+                float v = datas.getBloodSugarValue();
+                Date date = datas.getCreatTime();
+                LogUtil.d("onReceiveSyncData 测得值：" + v + " 时间：" + date);
+            }
+
+            @Override
+            public void onReceiveSucess(BloodSugarData datas) {
+                // TODO Auto-generated method stub
+                float v = datas.getBloodSugarValue();
+                curBloodSugar = "" + v;
+                Date date = datas.getCreatTime();
+                LogUtil.d("onReceiveSucess 测得值：" + v + " 时间：" + date);
+                setBloodSugarDataUI(curBloodSugar);
+                BloodSugarAlertSelectTimeActivity.setiSetData(BloodSugarFragment.this);
+                startActivity(new Intent(getActivity(),BloodSugarAlertSelectTimeActivity.class));
+
+            }
+        });
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void bloodSugarAlertSelectTimeEvent(BloodSugarAlertSelectTimeEvent event)
-    {
+    public void setModifyCode(String code) {
+        //调整校验码
+        snMainHandler.modifyCode(Byte.parseByte(code), new SC_ModifyCodeSetCmdCallBack() {
+            @Override
+            public void onModifyCodeCmdFeedback(byte cModifyCode) {
+                LogUtil.d("设置成功，当前校验码为" + cModifyCode);
+            }
+        });
+    }
 
-        if (event.isSure)
+    public void setDeviceTime(Date date) {
+        //设置设备时间
+        snMainHandler.setMCTime(date, new SC_TimeSetCmdCallBack() {
+            @Override
+            public void onTimeSetCmdFeedback(Date date) {
+                LogUtil.d("设置时间成功：" + date);
+            }
+        });
+    }
+
+    //广播监听SDK ACTION
+    private final BroadcastReceiver mBtReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            if (SN_MainHandler.ACTION_SN_CONNECTION_STATE_CHANGED.equals(action)) {
+                if (snMainHandler.isUnSupport()) {
+                    LogUtil.d("手机设备不支持低功耗蓝牙，无法连接血糖仪");
+                } else if (snMainHandler.isConnected()) {
+                    LogUtil.d("蓝牙已经连接");
+//                    setConnectSuccessUI();
+                } else if (snMainHandler.isIdleState() || snMainHandler.isDisconnecting()) {
+//                    LogUtil.d("设备已断开");
+//                    handler.obtainMessage(MSG_BLUETOOTH_HAS_DISCONNECT,"设备已断开").sendToTarget();
+                }
+            } else if (SN_MainHandler.ACTION_SN_ERROR_STATE.equals(action)) {
+                Bundle bundle = intent.getExtras();
+                int errorStatus = bundle.getInt(SN_MainHandler.EXTRA_ERROR_STATUS);
+                if (errorStatus == SC_ErrorStatus.SC_OVER_RANGED_TEMPERATURE) {
+                    LogUtil.d("错误码：E-2");
+                } else if (errorStatus == SC_ErrorStatus.SC_AUTH_ERROR) {
+                    LogUtil.d("错误：认证失败！");
+                } else if (errorStatus == SC_ErrorStatus.SC_ERROR_OPERATE) {
+                    LogUtil.d("错误码：E-3！");
+                } else if (errorStatus == SC_ErrorStatus.SC_ERROR_FACTORY) {
+                    LogUtil.d("错误码：E-6！");
+                } else if (errorStatus == SC_ErrorStatus.SC_ABLOVE_MAX_VALUE) {
+                    LogUtil.d("错误码：HI");
+                    setBloodSugarDataUI("浓度太高");
+                } else if (errorStatus == SC_ErrorStatus.SC_BELOW_LEAST_VALUE) {
+                    LogUtil.d("错误码：LO");
+                    setBloodSugarDataUI("浓度太低");
+                } else if (errorStatus == SC_ErrorStatus.SC_LOW_POWER) {
+                    LogUtil.d("错误码：E-1！");
+                } else if (errorStatus == SC_ErrorStatus.SC_UNDEFINED_ERROR) {
+                    LogUtil.d("未知错误！");
+                } else if (errorStatus == 6) {
+                    LogUtil.d("E-6");
+                }
+            } else if (SN_MainHandler.ACTION_SN_MC_STATE.equals(action)) {
+                Bundle bundle = intent.getExtras();
+                int MCStatus = bundle.getInt(SN_MainHandler.EXTRA_MC_STATUS);
+            }
+        }
+    };
+
+    private IntentFilter makeIntentFilter() {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(SN_MainHandler.ACTION_SN_CONNECTION_STATE_CHANGED);
+        intentFilter.addAction(SN_MainHandler.ACTION_SN_ERROR_STATE);
+        intentFilter.addAction(SN_MainHandler.ACTION_SN_MC_STATE);
+        return intentFilter;
+    }
+
+    @Override
+    public void onSetData(int index, boolean isSure) {
+
+        LogUtil.d("onSetData:" + index + " isSure:" + isSure);
+        if (isSure)
         {
-            BloodSugarBean bloodSugarBean = bloodSugarBeans.getFirst();
-           if (bloodSugarBean == null)
-           {
-               bloodSugarBean = new BloodSugarBean();
-               bloodSugarBean.setDate(DateUtil.getCurYearMonthDay());
-               bloodSugarBeans.add(bloodSugarBean);
-           }else {
-               bloodSugarBean = bloodSugarBeans.getFirst();
-               if (bloodSugarBean.getDate() != DateUtil.getCurYearMonthDay())
-               {
-                   bloodSugarBean = new BloodSugarBean();
-                   bloodSugarBean.setDate(DateUtil.getCurYearMonthDay());
-                   bloodSugarBeans.addFirst(bloodSugarBean);
-               }
-           }
-            switch (event.index)
+            BloodSugarBean bloodSugarBean = null;
+            if (bloodSugarBeans.size() > 0)
+            {
+                bloodSugarBean = bloodSugarBeans.getFirst();
+                if (bloodSugarBean.getDate() != DateUtil.getCurYearMonthDay())
+                {
+                    bloodSugarBean = new BloodSugarBean();
+                    bloodSugarBean.setDate(DateUtil.getCurYearMonthDay());
+                    bloodSugarBeans.addFirst(bloodSugarBean);
+                }
+            }else {
+                bloodSugarBean = new BloodSugarBean();
+                bloodSugarBean.setDate(DateUtil.getCurYearMonthDay());
+                bloodSugarBeans.add(bloodSugarBean);
+            }
+
+            switch (index)
             {
 
                 case 1:
@@ -476,133 +680,11 @@ public class BloodSugarFragment extends BaseFragment<BloodSugarPresenter> implem
                 }
 
             }
+//            bloodSugarBean.updateAll("date=" + bloodSugarBean.getDate());
+            bloodSugarBean.save();
             bloodSugarAdapter.notifyDataSetChanged();
+
         }
 
     }
-
-
-
-    private void initReceiveBloodSugarDataListener(SN_MainHandler handler)
-    {
-        handler.registerReceiveBloodSugarData(new SC_CurrentDataCallBack<BloodSugarData>() {
-            @Override
-            public void onStatusChange(int status) {
-                // TODO Auto-generated method stub
-                if (status == SC_DataStatusUpdate.SC_BLOOD_FFLASH) {
-                    LogUtil.d("请插入试条测试！");
-//                    list.add(new DeviceListItem("请插入试条测试！", false));
-                } else if (status == SC_DataStatusUpdate.SC_MC_TESTING) {
-                    LogUtil.d("正在测试，请稍后");
-
-//                    list.add(new DeviceListItem("正在测试，请稍后！", false));
-                } else if (status == SC_DataStatusUpdate.SC_MC_SHUTTINGDOWN) {
-//                    list.add(new DeviceListItem("正在关机！", false));
-                    LogUtil.d("正在关机");
-                    FancyToast.makeText(getActivity(),"正在关机");
-                } else if (status == SC_DataStatusUpdate.SC_MC_SHUTDOWN) {
-                    LogUtil.d("已关机");
-                    FancyToast.makeText(getActivity(),"已关机");
-                    setErrMsgToConnectBtnUI("设备已关机");
-//                    handler.obtainMessage(MSG_DEVICE_HAS_SHUT_DOWN,"设备已关机").sendToTarget();
-//                    handler.obtainMessage(MSG_CONNECT_FAIL,"设备已关机").sendToTarget();
-                }
-
-            }
-
-            @Override
-            public void onReceiveSyncData(BloodSugarData datas) {
-                float v = datas.getBloodSugarValue();
-                Date date = datas.getCreatTime();
-                LogUtil.d("onReceiveSyncData 测得值：" + v + " 时间：" + date);
-            }
-
-            @Override
-            public void onReceiveSucess(BloodSugarData datas) {
-                // TODO Auto-generated method stub
-                float v = datas.getBloodSugarValue();
-                curBloodSugar = "" + v;
-                Date date = datas.getCreatTime();
-                LogUtil.d("onReceiveSucess 测得值：" + v + " 时间：" + date);
-                setBloodSugarDataUI(curBloodSugar);
-
-                startActivity(new Intent(getActivity(),BloodSugarAlertSelectTimeActivity.class));
-            }
-        });
-    }
-
-    public void setModifyCode(String code) {
-        //调整校验码
-        snMainHandler.modifyCode(Byte.parseByte(code), new SC_ModifyCodeSetCmdCallBack() {
-            @Override
-            public void onModifyCodeCmdFeedback(byte cModifyCode) {
-                LogUtil.d("设置成功，当前校验码为" + cModifyCode);
-            }
-        });
-    }
-
-    public void setDeviceTime(Date date) {
-        //设置设备时间
-        snMainHandler.setMCTime(date, new SC_TimeSetCmdCallBack() {
-            @Override
-            public void onTimeSetCmdFeedback(Date date) {
-                LogUtil.d("设置时间成功：" + date);
-            }
-        });
-    }
-
-    //广播监听SDK ACTION
-    private final BroadcastReceiver mBtReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-            if (SN_MainHandler.ACTION_SN_CONNECTION_STATE_CHANGED.equals(action)) {
-                if (snMainHandler.isUnSupport()) {
-                    LogUtil.d("手机设备不支持低功耗蓝牙，无法连接血糖仪");
-                } else if (snMainHandler.isConnected()) {
-                    LogUtil.d("蓝牙已经连接");
-                    setConnectSuccessUI();
-                } else if (snMainHandler.isIdleState() || snMainHandler.isDisconnecting()) {
-//                    LogUtil.d("设备已断开");
-//                    handler.obtainMessage(MSG_BLUETOOTH_HAS_DISCONNECT,"设备已断开").sendToTarget();
-                }
-            } else if (SN_MainHandler.ACTION_SN_ERROR_STATE.equals(action)) {
-                Bundle bundle = intent.getExtras();
-                int errorStatus = bundle.getInt(SN_MainHandler.EXTRA_ERROR_STATUS);
-                if (errorStatus == SC_ErrorStatus.SC_OVER_RANGED_TEMPERATURE) {
-                    LogUtil.d("错误码：E-2");
-                } else if (errorStatus == SC_ErrorStatus.SC_AUTH_ERROR) {
-                    LogUtil.d("错误：认证失败！");
-                } else if (errorStatus == SC_ErrorStatus.SC_ERROR_OPERATE) {
-                    LogUtil.d("错误码：E-3！");
-                } else if (errorStatus == SC_ErrorStatus.SC_ERROR_FACTORY) {
-                    LogUtil.d("错误码：E-6！");
-                } else if (errorStatus == SC_ErrorStatus.SC_ABLOVE_MAX_VALUE) {
-                    LogUtil.d("错误码：HI");
-                    setBloodSugarDataUI("浓度太高");
-                } else if (errorStatus == SC_ErrorStatus.SC_BELOW_LEAST_VALUE) {
-                    LogUtil.d("错误码：LO");
-                    setBloodSugarDataUI("浓度太低");
-                } else if (errorStatus == SC_ErrorStatus.SC_LOW_POWER) {
-                    LogUtil.d("错误码：E-1！");
-                } else if (errorStatus == SC_ErrorStatus.SC_UNDEFINED_ERROR) {
-                    LogUtil.d("未知错误！");
-                } else if (errorStatus == 6) {
-                    LogUtil.d("E-6");
-                }
-            } else if (SN_MainHandler.ACTION_SN_MC_STATE.equals(action)) {
-                Bundle bundle = intent.getExtras();
-                int MCStatus = bundle.getInt(SN_MainHandler.EXTRA_MC_STATUS);
-            }
-        }
-    };
-
-    private IntentFilter makeIntentFilter() {
-        final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(SN_MainHandler.ACTION_SN_CONNECTION_STATE_CHANGED);
-        intentFilter.addAction(SN_MainHandler.ACTION_SN_ERROR_STATE);
-        intentFilter.addAction(SN_MainHandler.ACTION_SN_MC_STATE);
-        return intentFilter;
-    }
-
 }

@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+
+def getProductName() {
+    return "zkysihome"
+}
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -27,6 +31,14 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        android.applicationVariants.all { variant ->
+            variant.outputs.all {
+                if (variant.buildType.name.equals('release')) {
+                    outputFileName = getProductName() + "_" + versionName  + '.apk'
+                }
+            }
         }
     }
     compileOptions {
@@ -119,7 +131,14 @@ dependencies {
 
     //用户权限获取
     implementation 'com.yanzhenjie:permission:2.0.0-alpha'
+    implementation files('libs/achartengine-1.2.0.jar')
 
 
+    implementation 'no.nordicsemi.android:log:2.2.0'
+    implementation 'no.nordicsemi.android.support.v18:scanner:1.4.0'
+
+    // The DFU Library is imported automatically from jcenter:
+    implementation 'no.nordicsemi.android:dfu:1.9.0'
+    implementation 'no.nordicsemi.android:ble-common:2.1.1'
 
 }

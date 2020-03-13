@@ -4,8 +4,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+
 import com.zkys.yun.ihome.R;
-import com.zkys.yun.ihome.app.mynurse.ui.MyNurseFragment;
 import com.zkys.yun.ihome.base.BaseFragment;
 
 import butterknife.BindView;
@@ -43,7 +43,8 @@ public class MessageCenterFragment extends BaseFragment {
 
     @Override
     public void initData() {
-        tvTitle.setText("消息中心");
+
+//        tvTitle.setText("消息中心");
     }
 
     @Override

@@ -21,6 +21,7 @@ public class BloodSugarAdapter extends BaseQuickAdapter<BloodSugarBean, BaseView
 
         String date = DateUtil.getMonthDay(item.getDate());
         helper.setText(R.id.tv_date,date);
+        helper.setText(R.id.tv_early_morning,item.getEarlyMorning());
         helper.setText(R.id.tv_before_breakfast,item.getBeforeBreakfast());
         helper.setText(R.id.tv_after_breakfast,item.getAfterBreakfast());
         helper.setText(R.id.tv_before_launch,item.getBeforeLaunch());

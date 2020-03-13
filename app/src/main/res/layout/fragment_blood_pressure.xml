@@ -1,13 +1,511 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:background="@color/yellow_gray"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
     android:clickable="true"
-    android:layout_height="match_parent">
-    <TextView
-        android:text="血压"
-        android:gravity="center"
-        android:textSize="33sp"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:id="@+id/rl_left"
+        android:layout_width="@dimen/px380"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/px10"
+        android:background="@mipmap/bloodsugar_left_bg">
+
+        <RelativeLayout
+            android:id="@+id/cl_connect_layer"
+            android:layout_width="@dimen/px260"
+            android:layout_height="@dimen/px260"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/px21">
+
+            <ImageView
+                android:id="@+id/iv_connect_bg"
+                android:layout_width="@dimen/px260"
+                android:layout_height="@dimen/px260"
+                android:layout_centerInParent="true"
+                android:scaleType="fitXY"
+                android:src="@mipmap/progress_sycle" />
+
+
+            <ImageView
+                android:id="@+id/connect_progress_2"
+                android:layout_width="@dimen/px240"
+                android:layout_height="@dimen/px240"
+                android:layout_centerInParent="true"
+                android:background="@mipmap/connect_progress_2"
+                android:scaleType="fitXY"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/im_display_data_bg"
+                android:layout_width="220px"
+                android:layout_height="@dimen/px164"
+                android:layout_alignTop="@id/btn_connect_blood_sugar"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="@dimen/px60"
+                android:layout_marginTop="@dimen/px10"
+                android:background="@mipmap/blood_sugar_rainbow"
+                android:scaleType="center"
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/btn_connect_blood_sugar"
+                android:layout_width="@dimen/px240"
+                android:layout_height="@dimen/px240"
+                android:layout_centerInParent="true"
+                android:background="@color/transparent"
+                android:text="正在连接..."
+                android:textColor="#46BEEB"
+                android:textSize="@dimen/px30"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tv_blood_sugar_unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/im_display_data_bg"
+                android:layout_centerHorizontal="true"
+                android:text="mmol/L"
+                android:textColor="#46BEEB"
+                android:textSize="24px"
+                android:textStyle="bold"
+
+
+                />
+
+        </RelativeLayout>
+
+
+        <Button
+            android:id="@+id/btn_set_verification_code"
+            android:layout_width="@dimen/px150"
+            android:layout_height="@dimen/px58"
+            android:layout_below="@id/cl_connect_layer"
+            android:layout_marginLeft="@dimen/px24"
+            android:layout_marginTop="@dimen/px27"
+            android:background="@mipmap/blood_sugar_btn_bg"
+            android:text="设置校验码"
+            android:textColor="@color/white"
+            android:textSize="@dimen/px24" />
+
+        <Button
+            android:id="@+id/btn_replace_the_binding"
+            android:layout_width="@dimen/px150"
+            android:layout_height="@dimen/px58"
+            android:layout_below="@id/cl_connect_layer"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/px27"
+            android:layout_marginRight="@dimen/px24"
+            android:background="@mipmap/blood_sugar_btn_bg"
+            android:text="更换绑定"
+            android:textColor="@color/white"
+            android:textSize="@dimen/px24" />
+
+
+        <TextView
+            android:id="@+id/tv_blood_glucose_meter_information"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_replace_the_binding"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginTop="@dimen/px44"
+            android:text="血糖仪信息"
+            android:textColor="#FFFFFF"
+            android:textSize="24px"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/tv_model"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_blood_glucose_meter_information"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginTop="@dimen/px10"
+            android:text="型 号：WL-1"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/px20"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_sn_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_model"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginTop="@dimen/px10"
+            android:text="SN号：IGJ8ER00505"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/px20"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_factory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_sn_num"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginTop="@dimen/px10"
+            android:text="厂 家：三诺生物传感股份有限公司"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/px20"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_table_choice"
+        android:layout_width="@dimen/px205"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@id/rl_left"
+        android:layout_marginTop="@dimen/px10">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="37px"
+            android:text="血糖数据"
+            android:textColor="#333333"
+            android:textSize="@dimen/px28"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn_blood_sugar_icon_display"
+            android:layout_width="@dimen/px68"
+            android:layout_height="@dimen/px130"
+            android:layout_below="@id/tv_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/px30"
+            android:background="@mipmap/picture_unselect" />
+
+        <Button
+            android:id="@+id/btn_blood_sugar_form_display"
+            android:layout_width="@dimen/px68"
+            android:layout_height="@dimen/px130"
+            android:layout_below="@id/btn_blood_sugar_icon_display"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/px10"
+            android:background="@mipmap/form_select" />
+
+        <Button
+            android:id="@+id/btn_blood_sugar_statistics_display"
+            android:layout_width="@dimen/px68"
+            android:layout_height="@dimen/px130"
+            android:layout_below="@id/btn_blood_sugar_form_display"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/px10"
+            android:background="@mipmap/statistics_unselecct" />
+
+
+
+    </RelativeLayout>
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-</LinearLayout>
+        android:layout_toRightOf="@id/rl_table_choice"
+        android:layout_marginTop="@dimen/px42"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="660px"
+            android:layout_height="507px"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="91px"
+                android:background="@drawable/border_1_1_1_1"
+                >
+                <TextView
+                    android:id="@+id/tv_date"
+                    android:layout_width="80px"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border_1_1_1_1"
+                    android:gravity="center"
+                    android:text="日期"
+                    android:textAlignment="center"
+                    android:textColor="#333333"
+                    android:textSize="20px" />
+
+                <TextView
+                    android:id="@+id/tv_early_morning"
+                    android:layout_width="80px"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@id/tv_date"
+                    android:background="@drawable/border_1_1_1_1"
+                    android:gravity="center"
+                    android:text="凌晨"
+                    android:textAlignment="center"
+                    android:textColor="#333333"
+                    android:textSize="20px" />
+
+                <TextView
+                    android:id="@+id/tv_breakfast"
+                    android:layout_width="@dimen/px140"
+                    android:layout_height="@dimen/px45"
+                    android:layout_toRightOf="@id/tv_early_morning"
+                    android:background="@drawable/border_1_1_1_1"
+                    android:gravity="center"
+                    android:text="早餐"
+                    android:textAlignment="center"
+                    android:textColor="#333333"
+                    android:textSize="20px" />
+
+                <TextView
+                    android:id="@+id/tv_before_breakfast"
+                    android:layout_width="@dimen/px70"
+                    android:layout_height="@dimen/px45"
+                    android:layout_below="@id/tv_breakfast"
+                    android:layout_toRightOf="@id/tv_early_morning"
+                    android:background="@drawable/border_1_1_1_1"
+                    android:gravity="center"
+                    android:text="空腹"
+                    android:textAlignment="center"
+                    android:textColor="#333333"
+                    android:textSize="20px" />
+
+                <TextView
+                    android:id="@+id/tv_after_breakfast"
+                    android:layout_width="@dimen/px70"
+                    android:layout_height="@dimen/px45"
+                    android:layout_below="@id/tv_breakfast"
+                    android:layout_toRightOf="@id/tv_before_breakfast"
+                    android:background="@drawable/border_1_1_1_1"
+                    android:gravity="center"
+                    android:text="后"
+                    android:textAlignment="center"
+                    android:textColor="#333333"
+                    android:textSize="20px" />
+
+                <TextView
+                    android:id="@+id/tv_launch"
+                    android:layout_width="@dimen/px140"
+                    android:layout_height="@dimen/px45"
+                    android:layout_toRightOf="@id/tv_breakfast"
+                    android:background="@drawable/border_1_1_1_1"
+                    android:gravity="center"
+                    android:text="午餐"
+                    android:textAlignment="center"
+                    android:textColor="#333333"
+                    android:textSize="20px" />
+
+                <TextView
+                    android:id="@+id/tv_before_launch"
+                    android:layout_width="@dimen/px70"
+                    android:layout_height="@dimen/px45"
+                    android:layout_below="@id/tv_breakfast"
+                    android:layout_toRightOf="@id/tv_breakfast"
+                    android:background="@drawable/border_1_1_1_1"
+                    android:gravity="center"
+                    android:text="前"
+                    android:textAlignment="center"
+                    android:textColor="#333333"
+                    android:textSize="20px" />
+
+                <TextView
+                    android:id="@+id/tv_after_launch"
+                    android:layout_width="@dimen/px70"
+                    android:layout_height="@dimen/px45"
+                    android:layout_below="@id/tv_breakfast"
+                    android:layout_toRightOf="@id/tv_before_launch"
+                    android:background="@drawable/border_1_1_1_1"
+                    android:gravity="center"
+                    android:text="后"
+                    android:textAlignment="center"
+                    android:textColor="#333333"
+                    android:textSize="20px" />
+
+
+                <TextView
+                    android:id="@+id/tv_dinner"
+                    android:layout_width="@dimen/px140"
+                    android:layout_height="@dimen/px45"
+                    android:layout_toRightOf="@id/tv_launch"
+                    android:background="@drawable/border_1_1_1_1"
+                    android:gravity="center"
+                    android:text="晚餐"
+                    android:textAlignment="center"
+                    android:textColor="#333333"
+                    android:textSize="20px" />
+
+                <TextView
+                    android:id="@+id/tv_before_dinner"
+                    android:layout_width="@dimen/px70"
+                    android:layout_height="@dimen/px45"
+                    android:layout_below="@id/tv_launch"
+                    android:layout_toRightOf="@id/tv_launch"
+                    android:background="@drawable/border_1_1_1_1"
+                    android:gravity="center"
+                    android:text="前"
+                    android:textAlignment="center"
+                    android:textColor="#333333"
+                    android:textSize="20px" />
+
+                <TextView
+                    android:id="@+id/tv_after_dinner"
+                    android:layout_width="@dimen/px70"
+                    android:layout_height="@dimen/px45"
+                    android:layout_below="@id/tv_dinner"
+                    android:layout_toRightOf="@id/tv_before_dinner"
+                    android:background="@drawable/border_1_1_1_1"
+                    android:gravity="center"
+                    android:text="后"
+                    android:textAlignment="center"
+                    android:textColor="#333333"
+                    android:textSize="20px" />
+
+                <TextView
+                    android:id="@+id/tv_before_sleep"
+                    android:layout_width="80px"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@id/tv_dinner"
+                    android:background="@drawable/border_1_1_1_1"
+                    android:gravity="center"
+                    android:text="睡前"
+                    android:textAlignment="center"
+                    android:textColor="#333333"
+                    android:textSize="20px" />
+
+
+            </RelativeLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_blood_sugar_data_form"
+                android:background="@drawable/border_1_1_1_1"
+                android:layout_width="match_parent"
+                android:layout_height="342px"
+                android:layout_below="@id/banner" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px40"/>
+
+            <TextView
+                android:id="@+id/tv_tips"
+                android:layout_marginTop="@dimen/px46"
+                android:textSize="@dimen/px26"
+                android:layout_below="@id/btn_blood_sugar_statistics_display"
+                android:gravity="left"
+                android:text="温馨提示"
+                android:textStyle="bold"
+                android:textColor="#333333"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:paddingTop="@dimen/px20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="建议您的空腹血糖应该在"
+                    android:textSize="@dimen/px24"
+                    android:textColor="#333333"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/px24"
+                    android:text="4.4-7.0mmol/L"
+                    android:textColor="#46BEEB"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="餐前血糖应控制在"
+                    android:textSize="@dimen/px24"
+                    android:textColor="#333333"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/px24"
+                    android:text="3.9-5.3mmol/L"
+                    android:textColor="#46BEEB"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="餐后1小时血糖应控制在"
+                    android:textSize="@dimen/px24"
+                    android:textColor="#333333"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/px24"
+                    android:text="6.7-9.0mmol/L"
+                    android:textColor="#46BEEB"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="餐后2小时血糖应控制在"
+                    android:textSize="@dimen/px24"
+                    android:textColor="#333333"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/px24"
+                    android:text="3.9-7.5mmol/L"
+                    android:textColor="#46BEEB"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/px100"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="餐后3小时血糖应控制在"
+                    android:textSize="@dimen/px24"
+                    android:textColor="#333333"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/px24"
+                    android:text="3.9-6.1mmol/L"
+                    android:textColor="#46BEEB"
+                    />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+
+</RelativeLayout>

@@ -3,18 +3,14 @@ package com.zkys.yun.ihome.app.bloodsugar.ui;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.Nullable;
 
 import com.zkys.yun.ihome.R;
-import com.zkys.yun.ihome.app.bloodsugar.event.BloodSugarAlertSelectTimeEvent;
 import com.zkys.yun.ihome.util.toast.FancyToast;
 
-import org.greenrobot.eventbus.EventBus;
 
-import java.io.PipedReader;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,7 +55,6 @@ public class BloodSugarAlertSelectTimeActivity extends Activity {
         setContentView(R.layout.activity_blood_sugar_select_time);
         mUnBinder = ButterKnife.bind(this);
         clearBtnStates();
-
     }
 
 
@@ -79,8 +74,6 @@ public class BloodSugarAlertSelectTimeActivity extends Activity {
     })
     public void onClick(Button btn)
     {
-
-
 
         if (!(btn.getId() == R.id.btn_cancel || btn.getId() == R.id.btn_sure))
         {
@@ -142,7 +135,12 @@ public class BloodSugarAlertSelectTimeActivity extends Activity {
                 {
                     FancyToast.makeText(this,"请选择您的测量时间!").show();
                 }else {
-                    EventBus.getDefault().post(new BloodSugarAlertSelectTimeEvent(index,true));
+
+                    if (iSetData != null)
+                    {
+                        iSetData.onSetData(index,true);
+                    }
+
                     finish();
                 }
                 break;
@@ -180,4 +178,15 @@ public class BloodSugarAlertSelectTimeActivity extends Activity {
         super.onDestroy();
         mUnBinder.unbind();
     }
+    public static ISetData iSetData;
+
+    public static void  setiSetData(ISetData setData) {
+        iSetData = setData;
+    }
+
+    public interface ISetData
+    {
+        public void onSetData(int index,boolean isSure);
+    }
+
 }

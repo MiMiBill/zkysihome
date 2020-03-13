@@ -61,7 +61,7 @@ public class BodyMonitoringFragment extends BaseFragment {
 
     @Override
     public void initData() {
-            tvTitle.setText("身体监测");
+        tvTitle.setText("身体监测");
         fragments[0] = BloodPressureFragment.newInstance();
         fragments[1] = BloodSugarFragment.newInstance();
         fragments[2] = HeartRateFragment.newInstance();

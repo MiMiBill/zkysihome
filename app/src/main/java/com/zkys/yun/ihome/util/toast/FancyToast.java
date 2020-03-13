@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zkys.yun.ihome.R;
+import com.zkys.yun.ihome.base.LauncherApplication;
 
 
 public class FancyToast extends Toast {
@@ -41,6 +42,10 @@ public class FancyToast extends Toast {
     public static Toast makeText(Context context, String message, int duration, int type, boolean androidicon) {
         if (sToast == null)
         {
+            if (context == null)
+            {
+                context = LauncherApplication.getContext();
+            }
             sToast = new Toast(context);
         }
         sToast.setDuration(duration);
@@ -70,4 +75,5 @@ public class FancyToast extends Toast {
         toast.setView(layout);
         return toast;
     }
+
 }

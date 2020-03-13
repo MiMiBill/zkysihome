@@ -22,6 +22,7 @@ import com.zkys.yun.ihome.base.BaseFragment;
 import com.zkys.yun.ihome.event.EventShowTab;
 import com.zkys.yun.ihome.event.UpdateStatusBarEvent;
 import com.zkys.yun.ihome.service.MainService;
+import com.zkys.yun.ihome.util.ble.BleUtil;
 import com.zkys.yun.ihome.util.log.LogUtil;
 import com.zkys.yun.ihome.util.toast.FancyToast;
 import com.zkys.yun.ihome.util.toast.ToastUtil;
@@ -69,6 +70,9 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initData() {
+
+
+        BleUtil.initSNHandler(this);
 
        startService( new Intent(getContext(),MainService.class));
 

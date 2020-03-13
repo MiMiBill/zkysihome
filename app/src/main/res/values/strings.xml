@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">zkysihome</string>
+    <string name="no_ble">改设备不支持Ble</string>
 </resources>

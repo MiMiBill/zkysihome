@@ -26,7 +26,12 @@ public class BloodSugarPresenter extends BasePresenter<BloodSugarContract.View> 
         snMainHandler.searchBlueToothDevice(new SC_BlueToothSearchCallBack<BlueToothInfo>() {
             @Override
             public void onBlueToothSeaching(BlueToothInfo blueToothInfo) {
-                mView.getBluetoothDevices(blueToothInfo);
+                if (mView == null)
+                {
+                    LogUtil.e("mView为空");
+                }else {
+                    mView.getBluetoothDevices(blueToothInfo);
+                }
             }
         });
 
@@ -48,7 +53,6 @@ public class BloodSugarPresenter extends BasePresenter<BloodSugarContract.View> 
                 mView.getBloodSugarData(list);
             }
         });
-
 
     }
 }

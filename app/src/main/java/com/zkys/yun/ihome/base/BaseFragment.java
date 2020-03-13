@@ -44,6 +44,9 @@ public abstract class BaseFragment<T extends BasePresenter> extends Fragment imp
         return mDelegate;
     }
 
+
+
+
     /**
      * Perform some extra transactions.
      * 额外的事务：自定义Tag，添加SharedElement动画，操作非回退栈Fragment
@@ -65,6 +68,8 @@ public abstract class BaseFragment<T extends BasePresenter> extends Fragment imp
         super.onCreate(savedInstanceState);
         mDelegate.onCreate(savedInstanceState);
     }
+
+
 
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
